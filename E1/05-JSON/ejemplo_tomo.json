@@ -1,0 +1,77 @@
+{
+  "version_esquema": "propuesta_tomo_02",
+  "tipo": "tomo",
+  "tomo_id": null,
+  "numero_tomo": null,
+  "notario": {
+    "nombre": null,
+    "carne": null
+  },
+  "total_paginas_incluidas": 2,
+  "paginas": [
+    {
+      "pagina_pdf": 3,
+      "folio": {
+        "numero": "001",
+        "lado": "frente",
+        "origen": "leido_ocr"
+      },
+      "papel_seguridad": {
+        "numero": null,
+        "serie": null
+      },
+      "actos_mencionados": [],
+      "texto": "Texto impreso de ejemplo.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+      "organizacion_texto": {
+        "unidad": "renglon_fisico",
+        "cantidad": 30
+      },
+      "alertas": [
+        {
+          "codigo": "ejemplo_sintetico",
+          "mensaje": "Datos ficticios para mostrar estructura; no son resultado de OCR."
+        },
+        {
+          "codigo": "posiciones_sin_lectura",
+          "mensaje": "29posiciones sin lectura ilustrativa; no se afirma que esten vacias en una fuente."
+        },
+        {
+          "codigo": "actos_no_extraidos",
+          "mensaje": "La lista vacia no declara ausencia de actos."
+        }
+      ]
+    },
+    {
+      "pagina_pdf": 4,
+      "folio": {
+        "numero": "001",
+        "lado": "vuelto",
+        "origen": "inferencia"
+      },
+      "papel_seguridad": {
+        "numero": null,
+        "serie": null
+      },
+      "actos_mencionados": [],
+      "texto": "Texto impreso de ejemplo.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+      "organizacion_texto": {
+        "unidad": "renglon_fisico",
+        "cantidad": 30
+      },
+      "alertas": [
+        {
+          "codigo": "ejemplo_sintetico",
+          "mensaje": "Datos ficticios para mostrar estructura; no son resultado de OCR."
+        },
+        {
+          "codigo": "posiciones_sin_lectura",
+          "mensaje": "29posiciones sin lectura ilustrativa; no se afirma que esten vacias en una fuente."
+        },
+        {
+          "codigo": "actos_no_extraidos",
+          "mensaje": "La lista vacia no declara ausencia de actos."
+        }
+      ]
+    }
+  ]
+}
