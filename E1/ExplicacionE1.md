@@ -10,3 +10,5 @@ Mi módulo se divide en 5 tareas:
 La idea es que sea un único flujo seguido, un solo programa, sin embargo, para poder probar cada etapa, en esta rama creé 5 carpetas y agrego código separado en cada etapa, de modo que pueda ir mejorando cada una hasta llegar al  objetivo final.
 
 Voy a agregar también código que permita ejecutar las 5 etapas a la vez actuales, sin embargo será solo algo temporal para ver el avance actual y no es la versión final.
+
+Ahorita los procesos están más centrados en tomos que en los índices. Aún no he llegado a procesar bien los índices.
