@@ -1,0 +1,112 @@
+{
+  "fuentes": [
+    {
+      "origen": "scripts/probar_flujo.py",
+      "sha256": "620ad912458bf26e14761b27d89e364e5271bc0c968ada5a720fd6c7e1c56811",
+      "funciones": [
+        "guardar_json",
+        "guardar_imagen",
+        "reconocer"
+      ]
+    },
+    {
+      "origen": "scripts/segmentacion_tesseract_v68.py",
+      "sha256": "5badf8949de1ea5690dd6b0d7091b75af76addd1bb54d92404fb8d59c8ab71a1",
+      "funciones": [
+        "masks",
+        "fallback_regions"
+      ]
+    },
+    {
+      "origen": "scripts/segmentar_renglones_numerados.py",
+      "sha256": "d2c7531a4dddc007689a6e03962230fbd6a2168b1c9cc1c707116d2070163b20",
+      "funciones": [
+        "candidatos",
+        "bandas_desde_etiquetas",
+        "limite_derecho",
+        "detectar"
+      ]
+    },
+    {
+      "origen": "scripts/columna_numeracion_v86.py",
+      "sha256": "a08a0acacd7f8277f8a3c269851924420659a89a56ded5cc5b48701fc06b3e79",
+      "funciones": [
+        "select_column",
+        "validate_labels"
+      ]
+    },
+    {
+      "origen": "scripts/exportar_formato_v69.py",
+      "sha256": "44ee502ab96c623fc9e3c1bf64828e9a816924957c3059e48e7e31b5ccc3fcb9",
+      "funciones": [
+        "number_literal",
+        "header",
+        "parse_field"
+      ]
+    },
+    {
+      "origen": "scripts/extraccion_automatica_v70.py",
+      "sha256": "70aa28f779854089178a7a911d5f0bce89baa3be2aadf9262fbd96212893f382",
+      "funciones": [
+        "candidates",
+        "assign_fields"
+      ]
+    },
+    {
+      "origen": "scripts/contexto_sello_v77.py",
+      "sha256": "b486d540993fb87c4e7ed09444b13fa63fb5da22bd43032c81855362dfe538f8",
+      "funciones": [
+        "header_geometry",
+        "select_seal"
+      ]
+    },
+    {
+      "origen": "scripts/realce_localizador_v74.py",
+      "sha256": "a10a6cd93ac95ea11f13d8b3131f192cce8ed8af7b1ef8ad6c3553cbfd74453c",
+      "funciones": [
+        "enhance"
+      ]
+    },
+    {
+      "origen": "scripts/margen_carnet_v78.py",
+      "sha256": "6cfced800e9e790da4930517bafa8c7b25a89146361d40e44d933f1baefa6ad1",
+      "funciones": [
+        "expand"
+      ]
+    },
+    {
+      "origen": "scripts/resolver_folios_v71.py",
+      "sha256": "a68acddec7c88089d240187110c1c3356d01a76a9831c9a4e1e90a6b30978c6a",
+      "funciones": [
+        "resolve"
+      ]
+    },
+    {
+      "origen": "scripts/remuestreo_recorte_v81.py",
+      "sha256": "fa8c7e095b0e6373611edc0a9dd53a4859a9e07298ff28789304f5384b039ba1",
+      "funciones": [
+        "render"
+      ]
+    },
+    {
+      "origen": "scripts/preprocesamiento_cuerpo_v79.py",
+      "sha256": "a3a028ab2342b8a5cfa1c60135fa584651a8f77df335991e0625a2bae574e6a7",
+      "funciones": [
+        "prepare_crop"
+      ]
+    },
+    {
+      "origen": "scripts/guardia_entrada_blanca_v101.py",
+      "sha256": "04b626f35032d767bac2bab0d0a462b600a2200306150d4400d066763ed9ef53",
+      "funciones": [
+        "inspect_input"
+      ]
+    }
+  ],
+  "adaptaciones": [
+    "Imports locales consolidados",
+    "Seleccion de columna v86 antes de OCR numerico",
+    "Guardia blanca en OCR numerico",
+    "IoU local sin dependencias de entrenamiento"
+  ]
+}

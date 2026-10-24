@@ -1,0 +1,12 @@
+{
+  "pdf": "entrada/tomo.pdf",
+  "salida": "salidas/prueba_01",
+  "paginas": "1-3",
+  "modelo": "pesos/detector_v32.pt",
+  "modelo_carnet": "pesos/carnet_v76.pt",
+  "python_modelo": "",
+  "tesseract": "",
+  "variante": "original",
+  "binarizacion": "otsu",
+  "guardar_txt": false
+}

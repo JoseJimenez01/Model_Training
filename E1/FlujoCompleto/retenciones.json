@@ -1,0 +1,17 @@
+{
+  "nota": "Retenciones conocidas por fuente exacta; no selector de calidad ni garantia para paginas nuevas.",
+  "paginas": [
+    {
+      "sha256_pdf": "28634ef13102856ab2ae32fb4b936edc5dd168b74ea41641e4e2069a13ad4ec4",
+      "pagina_pdf": 3,
+      "motivo": "Marcas manuscritas omitidas por v32; cuerpo retenido hasta resolver cobertura.",
+      "origen": "diagnostico_v103_y_retenciones_conservadas"
+    },
+    {
+      "sha256_pdf": "8d91edd21972c6d0587a8ce15c567371177b958367888555d9df6241e774312b",
+      "pagina_pdf": 3,
+      "motivo": "Zona residual pendiente de clasificacion; cuerpo retenido salvo recuperaciones locales no generalizadas.",
+      "origen": "diagnostico_v103_y_retenciones_conservadas"
+    }
+  ]
+}

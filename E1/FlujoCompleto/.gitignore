@@ -1,0 +1,7 @@
+.venv/
+__pycache__/
+pesos/
+entrada/
+salidas/
+*.pt
+ajustes.local.json
