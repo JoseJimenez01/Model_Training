@@ -7,6 +7,7 @@ from queue import Queue, Empty
 import sys
 from threading import Event, Thread
 import webbrowser
+from nombres import sugerir_desde_pdf
 
 
 def gui():
@@ -27,6 +28,7 @@ def gui():
     fields['paginas']=tk.StringVar(value='1')
     fields['variante']=tk.StringVar(value='original')
     fields['binarizacion']=tk.StringVar(value='otsu')
+    fields['nombre_json']=tk.StringVar(value='resultado_pendiente.json')
     txt=tk.BooleanVar(value=False)
     settings=Path(__file__).resolve().parent/'ajustes.local.json'
     if settings.is_file():
@@ -49,7 +51,9 @@ def gui():
         else:
             types=[('PDF','*.pdf')] if name=='pdf' else [('Modelos','*.pt')] if name in ('modelo','modelo_carnet') else [('Ejecutables','*.exe')]
             value=filedialog.askopenfilename(parent=root,title=labels[name],filetypes=types)
-        if value:fields[name].set(value)
+        if value:
+            fields[name].set(value)
+            if name=='pdf':fields['nombre_json'].set(sugerir_desde_pdf(value))
     for row,(name,label) in enumerate(labels.items()):
         ttk.Label(frame,text=label).grid(row=row,column=0,sticky='w',pady=6)
         entry=ttk.Entry(frame,textvariable=fields[name]);entry.grid(row=row,column=1,sticky='ew',padx=8)
@@ -57,16 +61,17 @@ def gui():
         controls.extend([entry,button])
     for row,name,label,values in [(6,'paginas','Paginas PDF (ej.: 1,3-5)',None),
         (7,'variante','Tratamiento para OCR',('original','gris','clahe_gamma','vertical_1x3')),
-        (8,'binarizacion','Binarizacion del cuerpo',('otsu','sauvola'))]:
+        (8,'binarizacion','Binarizacion del cuerpo',('otsu','sauvola')),
+        (9,'nombre_json','Nombre del JSON (editable)',None)]:
         ttk.Label(frame,text=label).grid(row=row,column=0,sticky='w',pady=6)
         control=ttk.Combobox(frame,textvariable=fields[name],values=values,state='readonly') if values else ttk.Entry(frame,textvariable=fields[name])
         control.grid(row=row,column=1,sticky='ew',padx=8);controls.append(control)
     box=ttk.Checkbutton(frame,text='Generar tambien TXT completo (opcional)',variable=txt)
-    box.grid(row=9,column=0,columnspan=3,sticky='w',pady=8);controls.append(box)
-    ttk.Label(frame,text='Resultado experimental: puede omitir texto y dejar manuscritos residuales. Revise alertas.',wraplength=750).grid(row=10,column=0,columnspan=3,sticky='w',pady=8)
-    bar=ttk.Progressbar(frame);bar.grid(row=11,column=0,columnspan=3,sticky='ew',pady=8)
-    ttk.Label(frame,textvariable=status,wraplength=750).grid(row=12,column=0,columnspan=3,sticky='w',pady=8)
-    buttons=ttk.Frame(frame);buttons.grid(row=13,column=0,columnspan=3,sticky='w')
+    box.grid(row=10,column=0,columnspan=3,sticky='w',pady=8);controls.append(box)
+    ttk.Label(frame,text='Resultado experimental: puede omitir texto y dejar manuscritos residuales. Revise alertas.',wraplength=750).grid(row=11,column=0,columnspan=3,sticky='w',pady=8)
+    bar=ttk.Progressbar(frame);bar.grid(row=12,column=0,columnspan=3,sticky='ew',pady=8)
+    ttk.Label(frame,textvariable=status,wraplength=750).grid(row=13,column=0,columnspan=3,sticky='w',pady=8)
+    buttons=ttk.Frame(frame);buttons.grid(row=14,column=0,columnspan=3,sticky='w')
     def opening():
         if state['result']:webbrowser.open(Path(state['result']['visor']).resolve().as_uri())
     def receive():

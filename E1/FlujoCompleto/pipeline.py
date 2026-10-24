@@ -24,6 +24,7 @@ from PIL import Image
 
 from extraccion import seleccionar_paginas
 from preprocesamiento import transformar
+from nombres import validar_nombre
 from recetas import (sha, guardar_json, guardar_imagen, masks, fallback_regions, detectar,
     header_geometry, select_seal, candidates, assign_fields, header, parse_field,
     resolve, enhance, expand, render, inspect_input, reconocer)
@@ -218,6 +219,7 @@ def run(config,progress,cancel,detector_factory=Detector):
     if config.get('binarizacion','otsu') not in ('otsu','sauvola'):
         raise ValueError('Binarizacion no admitida.')
     pdf=Path(config['pdf']);output=Path(config['salida'])
+    json_name=validar_nombre(config.get('nombre_json') or 'resultado_pendiente.json')
     if output.exists():raise FileExistsError('La carpeta de salida ya existe.')
     with pymupdf.open(pdf) as doc:
         if not doc.is_pdf or doc.needs_pass or not doc.page_count:raise ValueError('PDF ilegible, vacio o protegido.')
@@ -234,11 +236,12 @@ def run(config,progress,cancel,detector_factory=Detector):
         report=dict(estado='en_proceso',fecha_utc=datetime.now(timezone.utc).isoformat(),
             fuente=dict(archivo=pdf.name,sha256=source_hash,paginas_seleccionadas=selected),
             configuracion={k:config.get(k) for k in ('variante','binarizacion','guardar_txt')},
+            archivo_json=json_name,nombre_json_origen='etiqueta_tecnica_configurada' if config.get('nombre_json') else 'pendiente_por_falta_de_etiqueta',
             version_tesseract=version,detector=detector.info,paginas=[],cabecera={},
             limitacion='Experimental: cajas imperfectas, posibles residuos/cortes; sin selector automatico de claridad validado.')
         numbers=[];names=[];cards=[];folios=[]
         def save():
-            guardar_json(output/'formato.json',result);guardar_json(output/'ejecucion.json',report)
+            guardar_json(output/json_name,result);guardar_json(output/'ejecucion.json',report)
         save()
         with pymupdf.open(pdf) as doc:
             for index,number in enumerate(selected):
@@ -325,11 +328,11 @@ def run(config,progress,cancel,detector_factory=Detector):
             page_html(page,output/'paginas'/f'page_{page["pagina_pdf"]:03}.html',selected[index-1] if index else None,selected[index+1] if index+1<len(selected) else None)
         links=''.join('<li><a href="paginas/page_'+f'{p["pagina_pdf"]:03}'+'.html">Pagina PDF '+str(p['pagina_pdf'])+'</a></li>' for p in result['paginas'])
         (output/'index.html').write_text('<!doctype html><meta charset="utf-8"><title>Resultado E1</title><h1>Resultado provisional</h1>'
-            '<p>'+html.escape(report['estado'])+'; revisar alertas. Sin garantia de exactitud.</p><p><a href="formato.json">JSON completo</a></p><ol>'+links+'</ol>',encoding='utf-8')
+            '<p>'+html.escape(report['estado'])+'; revisar alertas. Sin garantia de exactitud.</p><p><a href="'+json_name+'">JSON completo</a></p><ol>'+links+'</ol>',encoding='utf-8')
         if config.get('guardar_txt'):
             with (output/'revision.txt').open('w',encoding='utf-8') as stream:
                 for page in result['paginas']:
                     stream.write(f'\n=== Pagina PDF {page["pagina_pdf"]} ===\n'+(page['texto'] or '[Sin texto publicado; consultar alertas]')+'\n')
-        return dict(salida=str(output),estado=report['estado'],paginas=len(selected),json=str(output/'formato.json'),visor=str(output/'index.html'))
+        return dict(salida=str(output),estado=report['estado'],paginas=len(selected),json=str(output/json_name),visor=str(output/'index.html'))
     finally:
         detector.close()

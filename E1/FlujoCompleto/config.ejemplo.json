@@ -1,6 +1,7 @@
 {
   "pdf": "entrada/tomo.pdf",
   "salida": "salidas/prueba_01",
+  "nombre_json": "tomo08_LeninRojas.json",
   "paginas": "1-3",
   "modelo": "pesos/detector_v32.pt",
   "modelo_carnet": "pesos/carnet_v76.pt",

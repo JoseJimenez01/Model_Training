@@ -1,7 +1,7 @@
 # Flujo completo provisional — E1
 
 Una entrada para seleccionar un tomo PDF, procesar todas sus páginas o una
-selección y generar **`formato.json`** con texto unido por página. Funciona
+selección y generar **un JSON con nombre de tomo y notario** con texto unido por página. Funciona
 localmente, sin subir documentos ni entrenar modelos.
 
 Reúne extracción PNG300DPI, preprocesamiento elegido, detector v32, numeración
@@ -35,6 +35,23 @@ El detector siempre recibe la imagen original. La variante elegida se aplica
 solo a la copia para OCR, manteniendo coordenadas. No hay selector automático
 de tratamiento por calidad ni por nombre del documento.
 
+### Nombre del JSON
+
+La convención conversada es `tomo##_NombreNotario.json` para tomos e
+`indiceFecha_NombreNotario.json` para índices. El flujo actual procesa tomos;
+la convención común no implica que ya procese índices completos.
+
+Al buscar un PDF con nombre reconocible, el campo **Nombre del JSON** propone
+una etiqueta editable. Por ejemplo, `Tomo 8 Lenin Rojas Lopez.pdf` propone
+`tomo08_LeninRojasLopez.json`; puede acortarla a `tomo08_LeninRojas.json`.
+No se eliminan componentes del nombre automáticamente para evitar ambigüedad.
+Sin etiqueta suficiente se conserva `resultado_pendiente.json`.
+
+Es un nombre técnico de salida: no confirma ni completa tomo o notario dentro
+del JSON. El contenido sigue procediendo del OCR. Por comandos se configura
+con `nombre_json`; si no se indica, queda el nombre pendiente. Los resultados
+anteriores no se renombran ni se sobrescriben. El acuerdo final con E3 sigue pendiente.
+
 Las rutas de modelos, destino y ejecutables se recuerdan en `ajustes.local.json`,
 excluido de Git. Cada corrida crea una carpeta nueva. **Detener** espera la
 operación actual y conserva lo procesado, con páginas restantes canceladas.
@@ -43,7 +60,7 @@ operación actual y conserva lo procesado, con páginas restantes canceladas.
 
 El visor muestra un índice y abre **una página cada vez**, con texto, campos
 y alertas. No carga el texto completo de200páginas en una sola vista.
-`formato.json` reúne todas las páginas seleccionadas; `ejecucion.json` registra
+El JSON de contenido reúne todas las páginas seleccionadas; `ejecucion.json` registra
 estado y procedencia. El TXT completo es opcional y está desactivado por defecto.
 Si se activa, `revision.txt` separa páginas con encabezados de revisión.
 

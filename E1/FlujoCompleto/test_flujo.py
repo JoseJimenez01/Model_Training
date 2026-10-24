@@ -13,6 +13,7 @@ import numpy as np
 import pymupdf
 
 import pipeline
+from nombres import nombre_tomo, nombre_indice, sugerir_desde_pdf, validar_nombre
 from recetas import guardar_json, resolve
 
 
@@ -45,10 +46,16 @@ class FlowTests(unittest.TestCase):
     def tearDown(self):
         self.temp.cleanup()
     def test_end_to_end_continues_and_excludes(self):
+        self.config['nombre_json']='tomo08_LeninRojas.json'
         class Failing(SyntheticDetector):fail_page='page_002'
         result=pipeline.run(self.config,lambda *p:None,Event(),Failing)
         self.assertEqual(result['estado'],'incompleto')
-        root=Path(result['salida']);data=json.loads((root/'formato.json').read_text(encoding='utf-8'))
+        root=Path(result['salida']);data=json.loads(Path(result['json']).read_text(encoding='utf-8'))
+        self.assertEqual(Path(result['json']).name,'tomo08_LeninRojas.json')
+        self.assertFalse((root/'formato.json').exists())
+        self.assertIn('href="tomo08_LeninRojas.json"',(root/'index.html').read_text(encoding='utf-8'))
+        self.assertIsNone(data['numero_tomo'])
+        self.assertIsNone(data['notario']['nombre'])
         self.assertEqual([p['pagina_pdf'] for p in data['paginas']],[1,2,3])
         self.assertIsNone(data['paginas'][1]['texto'])
         self.assertIn('PRUEBA',data['paginas'][0]['texto'])
@@ -64,7 +71,7 @@ class FlowTests(unittest.TestCase):
         self.config['guardar_txt']=False
         result=pipeline.run(self.config,progress,cancel,SyntheticDetector)
         self.assertEqual(result['estado'],'cancelado')
-        root=Path(result['salida']);data=json.loads((root/'formato.json').read_text(encoding='utf-8'))
+        root=Path(result['salida']);data=json.loads((root/'resultado_pendiente.json').read_text(encoding='utf-8'))
         self.assertEqual(len(data['paginas']),3)
         self.assertEqual(data['paginas'][2]['alertas'][0]['codigo'],'cancelado')
         self.assertFalse((root/'revision.txt').exists())
@@ -85,7 +92,7 @@ class FlowTests(unittest.TestCase):
             result=pipeline.run(self.config,lambda *p:None,Event(),SyntheticDetector)
         body.assert_not_called()
         self.assertEqual(result['estado'],'incompleto')
-        data=json.loads((Path(result['salida'])/'formato.json').read_text(encoding='utf-8'))
+        data=json.loads((Path(result['salida'])/'resultado_pendiente.json').read_text(encoding='utf-8'))
         self.assertIsNone(data['paginas'][0]['texto'])
         self.assertTrue(any(a['codigo']=='retencion_conservada' for a in data['paginas'][0]['alertas']))
     def test_html_escapes_ocr_and_no_bulk_text(self):
@@ -99,6 +106,22 @@ class FlowTests(unittest.TestCase):
             ocr_cabecera=[dict(id='r',texto_original='NO. 001')]),
             dict(**common,pagina_pdf=3,candidatos=[],ocr_cabecera=[])]
         self.assertIsNone(resolve(records)[1]['folio']['numero'])
+
+
+class NamingTests(unittest.TestCase):
+    def test_tomo_and_proposal_keep_all_name_parts(self):
+        self.assertEqual(nombre_tomo(8,'Lenin Rojas'),'tomo08_LeninRojas.json')
+        self.assertEqual(nombre_tomo(123,'Ana Mar\u00eda De La Cruz'),'tomo123_AnaMariaDeLaCruz.json')
+        self.assertEqual(sugerir_desde_pdf('Tomo  8 Lenin Rojas Lopez.pdf'),'tomo08_LeninRojasLopez.json')
+        self.assertEqual(sugerir_desde_pdf('documento.pdf'),'resultado_pendiente.json')
+    def test_index_periods_are_supplied_not_inferred(self):
+        for period in ('2017-2024','2019','2019-04','2019-04-Q1','2019-04-Q2'):
+            self.assertEqual(nombre_indice(period,'Lenin Rojas'),f'indice{period}_LeninRojas.json')
+        for period in ('2024-2017','2019-13','2019-04-Q3','enero'):
+            with self.assertRaises(ValueError):nombre_indice(period,'Lenin')
+    def test_invalid_or_reserved_names_rejected(self):
+        for value in ('../tomo08_Lenin.json','ejecucion.json','evidencia_folios.json','CON.json','nombre.txt'):
+            with self.assertRaises(ValueError):validar_nombre(value)
 
 
 if __name__=='__main__':
